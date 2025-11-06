@@ -48,13 +48,13 @@ docker-compose run app start
 ---
 Ensure you're in the `src` directory. When running the following commands, **if you installed manually**.  
 **If you used docker**,
-start the tvwb.py shell with `docker-compose run app shell` (in the project root directory) and omit the `python3 tvwb.py` portion of the commands.
+start the tvwb.py shell with `docker-compose run app shell` (in the project root directory) and omit the `python tvwb.py` portion of the commands.
 
 ---
 ### Creating an action
 
 ```bash
-python3 tvwb.py action:create NewAction --register
+python tvwb.py action:create NewAction --register
 ```
 
 This creates an action and automatically registers it with the app.  [Learn more on registering here](https://github.com/robswc/tradingview-webhooks-bot/wiki/Registering).
@@ -66,7 +66,7 @@ You can also check out some "pre-made" [community actions](https://github.com/ro
 ### Linking an action to an event
 
 ```bash
-python3 tvwb.py action:link NewAction WebhookReceived
+python tvwb.py action:link NewAction WebhookReceived
 ```
 
 This links an action to the `WebhookReceived` event.  The `WebhookReceived` event is fired when a webhook is received by the app and is currently the only default event.
@@ -94,7 +94,7 @@ class NewAction(Action):
 ### Running the app
 
 ```bash
-python3 tvwb.py start
+python tvwb.py start
 ```
 
 ### Sending a webhook
@@ -124,7 +124,7 @@ SDKs or APIs available.  The general workflow would look something like: webhook
 
 #### The tvwb.py shell
 
-You can use the `tvwb.py shell` command to open a python shell with the app context.  This allows you to interact with the app without having to enter `python3 tvwb.py` every time.
+You can use the `tvwb.py shell` command to open a python shell with the app context.  This allows you to interact with the app without having to enter `python tvwb.py` every time.
 
 #### Running Docker on Windows/Mac?
 
