@@ -4,13 +4,17 @@ import json
 # Configuration
 url = "http://localhost:5000/webhook"
 
-key = "WebhookReceived:253f3e"
+key = "WebhookReceivedMtOrder:0ea2fe"
 
 # Payload de test
 payload = {
     "key": key,
-    "message": "Nice, I'm a webhook from Python!",
-    "data": "XAUUSD"
+    "symbol": "XAUUSD",
+    "magic": 202220001,
+    "order_type": "sell",
+    "volume": 0.1,
+    "tp_rel": 1000, # 1000 points
+    "sl_rel": 500 # 500 points
 }
 
 response = requests.post(url, json=payload)
