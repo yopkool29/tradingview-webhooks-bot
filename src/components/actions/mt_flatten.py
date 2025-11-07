@@ -3,6 +3,7 @@ import logging
 from components.actions.base.action import Action
 import MetaTrader5 as mt5
 from dotenv import load_dotenv
+from utils.formatting import _convert_to_float, _convert_to_int
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -48,9 +49,10 @@ class MtFlatten(Action):
             logger.error(f"Symbol {symbol} not found")
             return None
 
-        # Vérifier que le magic number est valide
-        if not isinstance(magic, int):
-            logger.error("Magic number must be an integer")
+        magic = _convert_to_int(magic)
+
+        if magic is None or not isinstance(magic, int):
+            logger.error("Magic number is missing or invalid")
             return None
 
         # Récupérer toutes les positions ouvertes pour ce symbole

@@ -3,6 +3,7 @@ import logging
 from components.actions.base.action import Action
 import MetaTrader5 as mt5
 from dotenv import load_dotenv
+from utils.formatting import _convert_to_float, _convert_to_int
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -43,20 +44,6 @@ class MtPlaceOrder(Action):
         self.__logout()
         print("MT5 connection closed in destructor")
 
-    def _convert_to_float(self, value):
-        try:
-            return float(value)
-        except ValueError:
-            logger.error(f"Failed to convert {value} to float")
-            return None
-
-    def _convert_to_int(self, value):
-        try:
-            return int(value)
-        except ValueError:
-            logger.error(f"Failed to convert {value} to int")
-            return None
-
     def __place_order(
         self,
         magic,
@@ -76,7 +63,7 @@ class MtPlaceOrder(Action):
 
         # import pdb; pdb.set_trace()
 
-        magic = self._convert_to_int(magic)
+        magic = _convert_to_int(magic)
 
         if magic is None or not isinstance(magic, int):
             logger.error("Magic number is missing or invalid")
@@ -92,7 +79,7 @@ class MtPlaceOrder(Action):
             logger.error(f"Failed to get symbol info for {symbol}")
             return None
 
-        volume = self._convert_to_float(volume)
+        volume = _convert_to_float(volume)
         if volume is None:
             logger.error("Volume is missing or invalid")
             return None
@@ -101,7 +88,7 @@ class MtPlaceOrder(Action):
 
         # Calculer le prix d'entrée
         if price is not None:
-            entry_price = price
+            entry_price = _convert_to_float(price)
         else:
             tick = mt5.symbol_info_tick(symbol)
             if tick is None:
