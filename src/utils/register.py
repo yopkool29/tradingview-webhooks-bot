@@ -15,13 +15,16 @@ def register_action(action_name):
     :param target_file: str
     :return: bool
     """
-    logger.info(f'Registering action --->\t{action_name}')
+    logger.info(f"Registering action --->\t{action_name}")
     try:
         # snake case name
         snake_case_name = snake_case(action_name)
         # import the target file
-        action = getattr(import_module(f'components.actions.{snake_case_name}', action_name), action_name)()
-        logger.debug(f'Imported action module --->\t{snake_case_name}')
+        action = getattr(
+            import_module(f"components.actions.{snake_case_name}", action_name),
+            action_name,
+        )()
+        logger.debug(f"Imported action module --->\t{snake_case_name}")
         # register the action
         action.register()
         logger.info(f'Action "{action_name}" registered successfully!')
@@ -40,13 +43,16 @@ def register_event(event_name: str):
     :param target_file: str
     :return: bool
     """
-    logger.info(f'Registering event --->\t{event_name}')
+    logger.info(f"Registering event --->\t{event_name}")
     try:
         # snake case name
         snake_case_name = snake_case(event_name)
         # import the target file
-        event = getattr(import_module(f'components.events.{snake_case_name}', event_name), event_name)()
-        logger.debug(f'Imported event module --->\t{snake_case_name}')
+        event = getattr(
+            import_module(f"components.events.{snake_case_name}", event_name),
+            event_name,
+        )()
+        logger.debug(f"Imported event module --->\t{snake_case_name}")
         # register the event
         event.register()
         logger.info(f'Event "{event_name}" registered successfully!')

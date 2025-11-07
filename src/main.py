@@ -101,6 +101,7 @@ def activate_event():
         # if event name is not provided, or cannot be found, 404
         if event_name is None:
             return Response(f'Event name cannot be empty ({event_name})', status=404)
+
         try:
             event = em.get(event_name)
         except ValueError:
