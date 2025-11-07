@@ -122,9 +122,9 @@
                                                                         <small class="text-muted ps-2">(entire string)</small>
                                                                     </div>
                                                                     <div>
-                                                                        <code id="{{ key }}-field">{{ event.key }}</code>
+                                                                        <code id="{{ loop.index }}-field">{{ event.key }}</code>
                                                                         <button
-                                                                                onclick="copyToClipboard('#{{ key }}-field')"
+                                                                                onclick="copyToClipboard('{{ loop.index }}-field')"
                                                                                 class="btn btn-sm ms-2 px-2 py-1 shadow-sm"
                                                                         >
 
@@ -140,11 +140,11 @@
                                                     <div class="form-check form-switch">
                                                         <input class="form-check-input toggle-active-switch"
                                                                type="checkbox" role="switch"
-                                                               id="{{ event }}toggleActiveSwitch" checked>
+                                                               id="{{ loop.index }}toggleActiveSwitch" checked>
                                                         <label class="form-check-label"
-                                                               for="{{ event }}toggleActiveSwitch">Active</label>
+                                                               for="{{ loop.index }}toggleActiveSwitch">Active</label>
                                                     </div>
-                                                    <i id="{{ event }}ActiveStatus" class="fa-solid fa-circle-check fs-3 text-success"></i>
+                                                    <i id="{{ loop.index }}ActiveStatus" class="fa-solid fa-circle-check fs-3 text-success"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -274,12 +274,19 @@
     });
 </script>
 <script>
-    function copyToClipboard(element) {
-        var $temp = $("<input>");
+    function copyToClipboard(elementId) {
+        const el = document.getElementById(elementId);
+        if (!el) {
+            alert('Element not found!');
+            return;
+        }
+        const text = el.textContent;
+        var $temp = $("<textarea>");
         $("body").append($temp);
-        $temp.val($(element).text()).select();
+        $temp.val(text).select();
         document.execCommand("copy");
         $temp.remove();
+        alert('Copied!');
     }
 </script>
 <div class="beta-border-bottom"></div>
