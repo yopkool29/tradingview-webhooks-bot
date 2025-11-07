@@ -11,7 +11,7 @@ except FileNotFoundError:
     open(LOG_LOCATION, 'w').close()
 
 # DO NOT CHANGE
-VERSION_NUMBER = '0.5'
+VERSION_NUMBER = '0.6'
 
 
 # if key file exists, read key, else generate key and write to file
