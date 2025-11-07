@@ -57,4 +57,4 @@ if sellSignal
     array.push(shortOthers, "volume=0.1")
     shortMsg := f_join(shortOthers)
     log.info(shortMsg)
-    strategy.entry("Vente", strategy.short, qty=0.1, alert_message = "")
+    strategy.entry("Vente", strategy.short, qty=0.1, alert_message = shortMsg)

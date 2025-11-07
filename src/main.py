@@ -60,13 +60,28 @@ def dashboard():
 
 @app.route("/webhook", methods=["POST"])
 async def webhook():
+    # import pdb; pdb.set_trace()
+
     if request.method == 'POST':
-        data = request.get_json()
-        if data is None:
-            logger.error(f'Error getting JSON data from request...')
-            logger.error(f'Request data: {request.data}')
-            logger.error(f'Request headers: {request.headers}')
-            return 'Error getting JSON data from request', 400
+        content_type = request.headers.get('Content-Type')
+        logger.info(f'/webhook Content-Type: {content_type}')
+
+        if content_type and content_type.startswith('text/plain'):
+            raw_data = request.data.decode('utf-8')
+            data = {}
+            for item in raw_data.split(','):
+                if '=' not in item:
+                    continue
+                key, value = item.split('=', 1)
+                data[key] = value
+
+        elif content_type == 'application/json':
+            data = request.get_json()
+            if data is None:
+                logger.error(f'Error getting JSON data from request...')
+                logger.error(f'Request data: {request.data}')
+                logger.error(f'Request headers: {request.headers}')
+                return 'Error getting JSON data from request', 400
 
         logger.info(f'Request Data: {data}')
         triggered_events = []
