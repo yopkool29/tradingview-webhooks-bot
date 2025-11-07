@@ -4,45 +4,24 @@ from components.actions.base.action import Action
 import MetaTrader5 as mt5
 from dotenv import load_dotenv
 from utils.formatting import _convert_to_float, _convert_to_int
+from utils.log import get_logger
+from .mt_utils import MtUtils
 
 # Initialize logger
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 # Load environment variables
 load_dotenv()
 
 
-class MtPlaceOrder(Action):
+class MtPlaceOrder(Action, MtUtils):
+
     def __init__(self):
         super().__init__()
-
-        self.__login()
-
-    def __login(self):
-
-        # Get credentials from environment variables
-        login = int(os.getenv("MT5_LOGIN", "123456"))
-        password = os.getenv("MT5_PASSWORD", "your_password")
-        server = os.getenv("MT5_SERVER", "your_server")
-
-        if not mt5.initialize():
-            print("initialize() failed, error code =", mt5.last_error())
-            quit()
-
-        # Login to MT5 account
-        self.authorized = mt5.login(login, password, server)
-        if not self.authorized:
-            print("login failed, error code =", mt5.last_error())
-            mt5.shutdown()
-            quit()
-
-    def __logout(self):
-        mt5.shutdown()
+        self.login()
 
     def __del__(self):
-        """Destructor to ensure MT5 shutdown"""
-        self.__logout()
-        print("MT5 connection closed in destructor")
+        self.logout()
 
     def __place_order(
         self,
@@ -60,8 +39,6 @@ class MtPlaceOrder(Action):
         if not mt5.symbol_select(symbol, True):
             logger.error(f"Symbol {symbol} not found")
             return None
-
-        # import pdb; pdb.set_trace()
 
         magic = _convert_to_int(magic)
 
