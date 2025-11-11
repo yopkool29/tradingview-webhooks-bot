@@ -60,8 +60,6 @@ def dashboard():
 
 @app.route("/webhook", methods=["POST"])
 async def webhook():
-    # import pdb; pdb.set_trace()
-
     if request.method == 'POST':
         content_type = request.headers.get('Content-Type')
         logger.info(f'/webhook Content-Type: {content_type}')

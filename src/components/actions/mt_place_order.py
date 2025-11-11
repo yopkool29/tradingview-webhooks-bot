@@ -134,10 +134,15 @@ class MtPlaceOrder(Action, MtUtils):
     def run(self, *args, **kwargs):
         super().run(*args, **kwargs)  # required
 
+        if os.getenv("MT5_ENABLED", "false").lower() == "false":
+            logger.warning("MetaTrader 5 is disabled (MT5_ENABLED=false in .env)")
+            return
+
         # Vérifier si on est connecté
         terminal_info = mt5.terminal_info()
         if terminal_info is None or not terminal_info.connected:
-            self.__login()
+            if not self.login():
+                return
 
         data = self.validate_data()
 

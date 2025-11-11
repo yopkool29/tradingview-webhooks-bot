@@ -10,7 +10,10 @@ class MtUtils:
     def __init__(self):
         pass
 
-    def login(self):
+    def login(self) -> bool:
+        if os.getenv("MT5_ENABLED", "false").lower() == "false":
+            return False
+
         try:
             # Get credentials from environment variables
             login = int(os.getenv("MT5_LOGIN", "123456"))
@@ -38,13 +41,17 @@ class MtUtils:
             logger.info(f"Currency: {account_info.currency}")
 
             self.connected = True
+            
+            return True
 
         except Exception as e:
             logger.error(f"Error initializing MT5 connection: {e}")
             self.connected = False
-            raise
+            return False
 
     def logout(self):
+        if os.getenv("MT5_ENABLED", "false").lower() == "false":
+            return
         if not self.connected:
             return
         mt5.shutdown()
