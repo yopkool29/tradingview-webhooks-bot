@@ -9,9 +9,9 @@
 Tradingview-webhooks-bot (TVWB) is a small, Python-based framework that allows you to extend or implement your own trading logic
 using data from [Tradingview's webhooks](https://www.tradingview.com/support/solutions/43000529348-about-webhooks/). 
 
-TVWB supports integration with MetaTrader 5 (MT5) and other Crypto currency brokers (but i havent tested them). It is not a trading library itself, but a framework for building your own trading systems.
+TVWB supports integration with **MetaTrader 5 (MT5)** and **NinjaTrader 8** for futures trading, plus other Crypto currency brokers. It is not a trading library itself, but a framework for building your own trading systems.
 
-**Note:** This repository is a fork of the original [robswc/tradingview-webhooks-bot](https://github.com/robswc/tradingview-webhooks-bot) project, modified to include MT5 integration.
+**Note:** This repository is a fork of the original [robswc/tradingview-webhooks-bot](https://github.com/robswc/tradingview-webhooks-bot) project, modified to include MT5 and NinjaTrader integration.
 [Get Support from the Original Project's Discord](https://discord.gg/wrjuSaZCFh)
 
 # The How 🏗
