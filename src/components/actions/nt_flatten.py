@@ -56,7 +56,10 @@ class NtFlatten(Action):
         strategy_id = data.get("strategy_id")
         
         # Get account from webhook data or environment
-        account = data.get("account", os.getenv("NT_ACCOUNT", "Sim101"))
+        account = data.get("account", os.getenv("NT_ACCOUNT"))
+        if not account:
+            logger.error("Account name is required")
+            return
         
         if strategy and strategy_id:
             # Flatten specific strategy

@@ -77,12 +77,17 @@ class NtPlaceOrder(Action):
 
         logger.info(f"Received webhook data: {data}")
 
+        account = data.get("account", os.getenv("NT_ACCOUNT"))
+        if not account:
+            logger.error("Account name is required")
+            return
+
         # Place order based on webhook data
         result = self.__place_order(
             symbol=data.get("symbol"),
             order_type=data.get("order_type"),
             quantity=data.get("quantity", 1),
-            account=data.get("account", os.getenv("NT_ACCOUNT", "Sim101")),
+            account=account,
             order_kind=data.get("order_kind", "MARKET"),
             limit_price=data.get("limit_price"),
             stop_price=data.get("stop_price"),

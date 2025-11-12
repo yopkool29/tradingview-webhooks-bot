@@ -49,7 +49,10 @@ class NtOrderInfo(Action):
         data = self.validate_data()
         logger.info(f"Received webhook data: {data}")
 
-        account = data.get("account", os.getenv("NT_ACCOUNT", "Sim101"))
+        account = data.get("account", os.getenv("NT_ACCOUNT"))
+        if not account:
+            logger.error("Account name is required")
+            return
 
         result = self.__get_orders(account=account)
 
