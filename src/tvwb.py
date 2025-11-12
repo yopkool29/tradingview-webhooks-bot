@@ -249,8 +249,8 @@ def test_nt_order_tp_sl(
     order_type: str = "BUY",
     quantity: int = 1,
     account: str = "Sim101",
-    tp: float = 25700,
-    sl: float = 25600,
+    tp: float = 25900,
+    sl: float = 25620,
 ):
     """Test NinjaTrader order webhook - Place a market order with TP and SL"""
     logger.info(f"Testing NinjaTrader order webhook: {order_type} {quantity} {symbol}")
@@ -292,6 +292,75 @@ def test_nt_flatten(symbol: str = "MNQ 12-25"):
     key = f'WebhookReceivedNtFlatten:{md5(f"WebhookReceivedNtFlatten{UNIQUE_KEY}".encode()).hexdigest()[:6]}'
 
     post_data = json.dumps({"key": key, "symbol": symbol})
+
+    run(
+        [
+            "curl",
+            "-X",
+            "POST",
+            "-H",
+            "Content-Type: application/json",
+            "-d",
+            post_data,
+            "http://localhost:5000/webhook",
+        ]
+    )
+
+
+@app.command("util:test-nt-position-info")
+def test_nt_position_info(symbol: str = "MNQ 12-25"):
+    """Test NinjaTrader position info webhook - Get position info"""
+    logger.info(f"Testing NinjaTrader position info webhook for {symbol}")
+
+    key = f'WebhookReceivedNtPositionInfo:{md5(f"WebhookReceivedNtPositionInfo{UNIQUE_KEY}".encode()).hexdigest()[:6]}'
+
+    post_data = json.dumps({"key": key, "symbol": symbol})
+
+    run(
+        [
+            "curl",
+            "-X",
+            "POST",
+            "-H",
+            "Content-Type: application/json",
+            "-d",
+            post_data,
+            "http://localhost:5000/webhook",
+        ]
+    )
+
+
+@app.command("util:test-nt-order-info")
+def test_nt_order_info(account: str = "Sim101"):
+    """Test NinjaTrader order info webhook - Get all working orders"""
+    logger.info(f"Testing NinjaTrader order info webhook for {account}")
+
+    key = f'WebhookReceivedNtOrderInfo:{md5(f"WebhookReceivedNtOrderInfo{UNIQUE_KEY}".encode()).hexdigest()[:6]}'
+
+    post_data = json.dumps({"key": key, "account": account})
+
+    run(
+        [
+            "curl",
+            "-X",
+            "POST",
+            "-H",
+            "Content-Type: application/json",
+            "-d",
+            post_data,
+            "http://localhost:5000/webhook",
+        ]
+    )
+
+
+@app.command("util:test-nt-account-info")
+def test_nt_account_info(account: str = "Sim101"):
+    """Test NinjaTrader account info webhook - Get account info"""
+    logger.info(f"Testing NinjaTrader account info webhook for {account}")
+
+    key = f'WebhookReceivedNtAccountInfo:{md5(f"WebhookReceivedNtAccountInfo{UNIQUE_KEY}".encode()).hexdigest()[:6]}'
+
+    post_data = json.dumps({"key": key, "account": account})
 
     run(
         [

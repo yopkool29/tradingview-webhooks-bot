@@ -2,7 +2,7 @@ import os
 from components.actions.base.action import Action
 from dotenv import load_dotenv
 from utils.log import get_logger
-from .nt_utils import NtUtils
+from .nt_wrapper.nt_wrapper import NtWrapper
 
 # Initialize logger
 logger = get_logger(__name__)
@@ -11,64 +11,29 @@ logger = get_logger(__name__)
 load_dotenv()
 
 
-class NtFlatten(Action, NtUtils):
+class NtFlatten(Action):
 
     def __init__(self):
         super().__init__()
         if os.getenv("NT_ENABLED", "false").lower() == "false":
             return
-        NtUtils.__init__(self)
-        self.initialize()
+        self.nt = NtWrapper()
 
     def __del__(self):
-        self.shutdown()
+        if hasattr(self, 'nt'):
+            self.nt.shutdown()
 
     def __flatten(self, symbol, account=None):
-
-        if not self.connected:
-            logger.error("Not connected to NinjaTrader")
-            return False
-
-        # Use account from env if not provided
-        if account is None:
-            account = self.account
-
-        # Build ATI command to close all positions
-        # CLOSEPOSITION command closes all positions for the specified instrument
-        command = f"CLOSEPOSITION;{account};{symbol};;;;;;;;;;"
-
-        logger.info(f"Closing all positions for {symbol} on account {account}")
-        
-        # Execute command
-        result = self.execute_command(command)
-        
-        if result:
-            logger.info(f"Flatten command executed successfully: {command}")
-        else:
-            logger.error(f"Failed to execute flatten command: {command}")
-        
-        return result
+        """
+        Close all positions for a symbol using the configured mode (ATI or AddOn)
+        """
+        return self.nt.flatten(symbol=symbol, account=account)
 
     def __flatten_strategy(self, symbol, strategy, strategy_id, account=None):
-
-        # Use account from env if not provided
-        if account is None:
-            account = self.account
-
-        # Build ATI command to close positions for specific strategy
-        command = f"CLOSEPOSITION;{account};{symbol};;;;;;;;{strategy};{strategy_id}"
-
-        logger.info(f"Closing positions for {symbol} - Strategy: {strategy} ({strategy_id})")
-        
-        # Execute command
-        result = self.execute_command(command)
-        
-        if result:
-            logger.info(f"Flatten strategy command executed successfully: {command}")
-        else:
-            logger.error(f"Failed to execute flatten strategy command: {command}")
-        
-        return result
+        """
+        Close positions for a specific strategy using the configured mode (ATI or AddOn)
+        """
+        return self.nt.flatten(symbol=symbol, account=account, strategy=strategy, strategy_id=strategy_id)
 
     def run(self, *args, **kwargs):
         super().run(*args, **kwargs)  # required
@@ -77,11 +42,10 @@ class NtFlatten(Action, NtUtils):
             logger.warning("NinjaTrader is disabled (NT_ENABLED=false in .env)")
             return
 
-        # Reinitialize if not connected
-        if not self.connected:
-            if not self.initialize():
-                logger.error("Failed to initialize NinjaTrader connection")
-                return
+        # Check if wrapper is connected
+        if not hasattr(self, 'nt') or not self.nt.connected:
+            logger.error("NinjaTrader is not connected")
+            return
 
         data = self.validate_data()
 
@@ -91,19 +55,22 @@ class NtFlatten(Action, NtUtils):
         strategy = data.get("strategy")
         strategy_id = data.get("strategy_id")
         
+        # Get account from webhook data or environment
+        account = data.get("account", os.getenv("NT_ACCOUNT", "Sim101"))
+        
         if strategy and strategy_id:
             # Flatten specific strategy
             result = self.__flatten_strategy(
                 symbol=data.get("symbol"),
                 strategy=strategy,
                 strategy_id=strategy_id,
-                account=self.account,
+                account=account,
             )
         else:
             # Flatten all positions for the symbol
             result = self.__flatten(
                 symbol=data.get("symbol"),
-                account=self.account,
+                account=account,
             )
 
         if result:

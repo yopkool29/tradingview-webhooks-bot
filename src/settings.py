@@ -15,6 +15,9 @@ REGISTERED_ACTIONS = [
     # NinjaTrader Actions
     "NtPlaceOrder",
     "NtFlatten",
+    "NtPositionInfo",
+    "NtOrderInfo",
+    "NtAccountInfo",
 ]
 
 # events
@@ -27,6 +30,9 @@ REGISTERED_EVENTS = [
     # NinjaTrader Events
     "WebhookReceivedNtOrder",
     "WebhookReceivedNtFlatten",
+    "WebhookReceivedNtPositionInfo",
+    "WebhookReceivedNtOrderInfo",
+    "WebhookReceivedNtAccountInfo",
 ]
 
 # links
@@ -40,4 +46,7 @@ REGISTERED_LINKS = [
     ("NtFlatten", "WebhookReceivedNtOrder"), # flatten avant
     ("NtPlaceOrder", "WebhookReceivedNtOrder"), # place les ordres apres
     ("NtFlatten", "WebhookReceivedNtFlatten"),
+    ("NtPositionInfo", "WebhookReceivedNtPositionInfo"),
+    ("NtOrderInfo", "WebhookReceivedNtOrderInfo"),
+    ("NtAccountInfo", "WebhookReceivedNtAccountInfo"),
 ]
